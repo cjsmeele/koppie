@@ -1,0 +1,51 @@
+#+TITLE: koppie
+#+AUTHOR: Chris Smeele
+
+A Brainf*** compiler built on top of LLVM.
+
+I created this toy compiler to explore LLVM code generation,
+following this guide: https://llvm.org/docs/tutorial/index.html
+
+* Performance
+
+koppie applies LLVM optimization passes, but doesn't otherwise do anything special to ensure good performance,
+as that wasn't the goal of this project.
+Nevertheless the resulting assembly should be a factor faster than anything achieved by common interpreter implementations.
+
+Taking the =mandel.b= program from
+[[https://github.com/kostya/benchmarks/tree/master/brainfuck2][this benchmark repo]],
+and the accompanying C++ interpreter implementation (compiled with =-O3 -flto -static=),
+I got the following comparison:
+
+| *mandel.b*   | *koppie* | *bf.cpp* |
+| Compile time | 2.5s     | N/A      |
+| Run time     | 2.5s     | 44.8s    |
+| Total time   | 5.0s     | 44.8s    |
+
+* Usage
+
+Make sure you have llvm 5.0 or higher.
+
+- Build the compiler with cmake:
+
+#+BEGIN_SRC sh
+mkdir build
+cd build
+cmake ..
+make
+#+END_SRC
+
+- Install =koppie= into your path, or set env variable =KOPPIE= to the full path of the binary.
+
+- Compile BF programs as follows:
+
+#+BEGIN_SRC sh
+./compile.sh bf-file.b       # Results in a 'bf-file' binary
+#+END_SRC
+
+You can pass =-o FILE= to the compile script to specify a different binary file name.
+If no input file is provided, the script will accept BF source on stdin.
+
+* Authors
+
+- [[https://github.com/cjsmeele][Chris Smeele]]
